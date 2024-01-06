@@ -11,6 +11,21 @@ import java.util.List;
 public
 
 class Streams {
+
+    /**
+     * make an array of bytes
+     * 
+     * @param List<Byte> byteList
+     * @return byte[] byteArray
+     */
+    private static byte[] arrayOfBytes(List<Byte> byteList) {
+        byte[] byteArray = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            byteArray[i] = (byte) byteList.get(i);
+        }
+        return byteArray;
+    }
+
     /**
      * Read from an InputStream until a quote character (") is found, then read
      * until another quote character is found and return the bytes in between the
@@ -87,7 +102,23 @@ class Streams {
      * @param badByte
      */
     public static void filterOut(InputStream in, OutputStream out, byte badByte) throws IOException {
-        // TODO: Implement
+        ArrayList<Byte> inputTextFilterd = new ArrayList<Byte>(); // add new array list of bytes
+        int c;
+        try {
+            c = in.read();
+            while (c != -1) {
+                byte byteC = (byte) c;
+                if (Byte.compare((byte) c, badByte) != 0) { // currentByte is not badByte
+                    inputTextFilterd.add(byteC);
+                }
+                c = in.read();
+            }
+            out.write(arrayOfBytes(inputTextFilterd)); // write to the outputstream
+        } catch (IOException e) { // catch errors
+            e.printStackTrace();
+        }
+        in.close(); // close input stream
+        out.close(); // close output stream
     }
 
     /**
