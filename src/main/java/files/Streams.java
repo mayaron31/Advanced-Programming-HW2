@@ -131,7 +131,22 @@ class Streams {
      * @return the number read from the stream
      */
     public static long readNumber(InputStream in) throws IOException {
-        // TODO: Implement
-        return 0;
+        int counter = 0; // will count until 5
+        long outputNum = 0; // the final number
+        try {
+            int inputByte = in.read(); // read first byte
+            while (inputByte != -1 && counter < 5) {
+                outputNum = (outputNum << 8) + inputByte; // moving 8 new bytes to the left, in order to build the
+                                                          // number i want.
+                counter++; // move to next byte in count, until 5
+                inputByte = in.read(); // read next byte.
+            }
+            if (counter > 5) { // if finish
+                return -1;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputNum;
     }
 }
