@@ -43,6 +43,7 @@ class Streams {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        in.close();// close stream
         return null;
     }
 
@@ -56,8 +57,26 @@ class Streams {
      *         not found, return up to the end of the stream).
      */
     public static String readUntil(Reader in, String endMark) throws IOException {
-        // TODO: Implement
+        StringBuilder inputText = new StringBuilder(); // build new string to contain input until endmark.
+        int c; // character
+        try {
+            c = in.read(); // read first char
+            while (c != -1 && inputText.indexOf(endMark) == -1) { // not empty and not reaching endmark index in input
+                                                                  // string
+                inputText.append((char) c); // add char to inputText.
+                c = in.read(); // keep reading
+            }
+            int endMarkFlag = inputText.indexOf(endMark); // position of endmark
+            if (endMarkFlag != -1) {
+                return inputText.substring(0, endMarkFlag); // delete endmark
+            }
+            return inputText.toString();
+        } catch (IOException e) { // catch errors
+            e.printStackTrace();
+        }
+        in.close(); // close stream
         return null;
+
     }
 
     /**
