@@ -13,13 +13,14 @@ public
 class Streams {
 
     /**
-     * make an array of bytes
+     * helper function which convert byte List to a byte array
      * 
-     * @param List<Byte> byteList
-     * @return byte[] byteArray
+     * @param List<Byte> byteList the list the contains bytes
+     * @return a byte Array of the same bytes as in the input list
      */
     private static byte[] arrayOfBytes(List<Byte> byteList) {
-        byte[] byteArray = new byte[byteList.size()];
+        byte[] byteArray = new byte[byteList.size()]; // calculate the array size
+        // copy byte object from list to the same position in the array
         for (int i = 0; i < byteList.size(); i++) {
             byteArray[i] = (byte) byteList.get(i);
         }
@@ -42,20 +43,22 @@ class Streams {
         int c; // character
         try {
             c = in.read(); // read char
-            while (c != -1 && c != '"') { // not empty and not reaching '"'
-                c = in.read(); // keep reading
+            while (c != -1 && c != '"') { // if we didn't find the first occurrence of '"' char and have'nt finished
+                                          // running
+                c = in.read(); // read next char
             }
-            if (c == '"') { // if reaching first '"'
+            if (c == '"') { // if found first '"' char
                 c = in.read();
                 int index = 0; // start reading qoute from here
-                while (c != -1 && c != '"') { // as long as not finished reading from file and not reaching '"'
-                    qouteout.add(index, (byte) c);
+                while (c != -1 && c != '"') { // as long as not finished reading from file and not finding closing '"'
+                                              // char
+                    qouteout.add(index, (byte) c); // add char to the list
                     c = in.read();
-                    index++; // add index and keep going
+                    index++; // increment index
                 }
                 return qouteout;
             }
-        } catch (IOException e) {
+        } catch (IOException e) { // catch an I/O error
             e.printStackTrace();
         }
         in.close();// close stream
@@ -76,20 +79,20 @@ class Streams {
         int c; // character
         try {
             c = in.read(); // read first char
-            while (c != -1 && inputText.indexOf(endMark) == -1) { // not empty and not reaching endmark index in input
-                                                                  // string
+            while (c != -1 && inputText.indexOf(endMark) == -1) { // read if the inputText is not empty and not reaching
+                                                                  // endmark index
                 inputText.append((char) c); // add char to inputText.
-                c = in.read(); // keep reading
+                c = in.read(); // read next chat
             }
-            int endMarkFlag = inputText.indexOf(endMark); // position of endmark
+            int endMarkFlag = inputText.indexOf(endMark); // position of endmark in inputText
             if (endMarkFlag != -1) {
                 return inputText.substring(0, endMarkFlag); // delete endmark
             }
             return inputText.toString();
-        } catch (IOException e) { // catch errors
+        } catch (IOException e) { // catch an I/O error
             e.printStackTrace();
         }
-        in.close(); // close stream
+        in.close(); // make sure input stream is closed closed
         return null;
 
     }
@@ -97,9 +100,9 @@ class Streams {
     /**
      * Copy bytes from input to output, ignoring all occurrences of badByte.
      *
-     * @param in
-     * @param out
-     * @param badByte
+     * @param in      an inputStream which we read the number from
+     * @param out     the outputStream where we write the filter bytes
+     * @param badByte The badBytes to be filterd/ignored
      */
     public static void filterOut(InputStream in, OutputStream out, byte badByte) throws IOException {
         ArrayList<Byte> inputTextFilterd = new ArrayList<Byte>(); // add new array list of bytes
@@ -108,17 +111,19 @@ class Streams {
             c = in.read();
             while (c != -1) {
                 byte byteC = (byte) c;
-                if (Byte.compare((byte) c, badByte) != 0) { // currentByte is not badByte
+                if (Byte.compare((byte) c, badByte) != 0) { // if current Byte is not badByte, add the current byte to
+                                                            // the filtered list
                     inputTextFilterd.add(byteC);
                 }
-                c = in.read();
+                c = in.read(); // read next byte
             }
             out.write(arrayOfBytes(inputTextFilterd)); // write to the outputstream
-        } catch (IOException e) { // catch errors
+        } catch (IOException e) { // catch an I/O error
             e.printStackTrace();
         }
-        in.close(); // close input stream
-        out.close(); // close output stream
+        // make sure input and output streams are closed
+        in.close();
+        out.close();
     }
 
     /**
@@ -127,26 +132,26 @@ class Streams {
      * with the most-significant byte first.
      * If the stream ends before 5 bytes are read, return -1.
      *
-     * @param in
+     * @param in an inputStream which we read the number from
      * @return the number read from the stream
      */
     public static long readNumber(InputStream in) throws IOException {
-        int counter = 0; // will count until 5
-        long outputNum = 0; // the final number
+        int counter = 0; // counter that will count until reaching 5
+        long outputNum = 0; // the final number that will be returned
         try {
             int inputByte = in.read(); // read first byte
             while (inputByte != -1 && counter < 5) {
-                outputNum = (outputNum << 8) + inputByte; // moving 8 new bytes to the left, in order to build the
-                                                          // number i want.
-                counter++; // move to next byte in count, until 5
-                inputByte = in.read(); // read next byte.
+                outputNum = (outputNum << 8) + inputByte; // build number by shifting 8 bytes to the left and adding new
+                                                          // byte
+                counter++; // move to next byte in count
+                inputByte = in.read(); // read next byte from inputstream
             }
-            if (counter > 5) { // if finish
+            if (counter > 5) { // if finish before reading 5 bytes
                 return -1;
             }
-        } catch (IOException e) {
+        } catch (IOException e) { // catch an I/O error
             e.printStackTrace();
         }
-        return outputNum;
+        return outputNum; // the 40-bytes
     }
 }
