@@ -146,7 +146,7 @@ class Streams {
                 counter++; // move to next byte in count
                 inputByte = in.read(); // read next byte from inputstream
             }
-            if (counter > 5) { // if finish before reading 5 bytes
+            if (counter < 5) { // if finish before reading 5 bytes
                 return -1;
             }
         } catch (IOException e) { // catch an I/O error
