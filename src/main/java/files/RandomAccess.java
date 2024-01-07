@@ -14,7 +14,7 @@ public class RandomAccess {
     public static void sortBytes(RandomAccessFile file) throws IOException {
         long fileLen = file.length();
         for (long i = 0; i < fileLen; i++) {
-            for (long j = 0; j < fileLen - 1; j++) {
+            for (long j = 1; j < fileLen - i; j++) {
                 file.seek(j - 1); // pointer to leftbyte
                 int leftByte = file.read();
                 file.seek(j); // pointer to right byte
@@ -39,22 +39,22 @@ public class RandomAccess {
      * @throws IOException if there is an I/O error.
      */
     public static void sortTriBytes(RandomAccessFile file) throws IOException {
-        long fileLen = file.length() / 3;
+        long fileLen = file.length();
         // switching using bubble-Sort
-        for (int i = 1; i < fileLen; i += 3) {
-            for (int j = 0; j < fileLen - 3; j -= 3) {
-                file.seek(j); // pointer to current 3 bytes
+        for (int i = 0; i < fileLen; i += 3) {
+            for (int j = 1; j < fileLen - 3; j += 3) {
+                file.seek(j - 1); // pointer to current 3 bytes
                 int firstByteSet = 0;
                 for (int m = 0; m < 3; m++) {
                     firstByteSet = firstByteSet << 8 + file.read(); // read current 3 bytes
                 }
-                file.seek(j + 3); // pointer to next 3 bytes
+                file.seek(j + 2); // pointer to next 3 bytes
                 int secondByteSet = 0;
                 for (int m = 0; m < 3; m++) {
                     secondByteSet = (secondByteSet << 8) + file.read(); // read those 3 bytes
                 }
                 if (secondByteSet < firstByteSet) { // check for bigger char
-                    swap24bytes(file, firstByteSet, secondByteSet, j, j + 3); // swap if needed
+                    swap24bytes(file, firstByteSet, secondByteSet, j - 1, j + 2); // swap if needed
                 }
 
             }
