@@ -41,10 +41,11 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
 
     @Override
     public void open() throws IOException {
-        this.clear(); // clear current content from file
         if (!this.dictFile.exists()) { // if the file doesnt exit- return
             return;
         }
+        this.clear(); // clear current content from file
+
         // open FileReader and BufferedReader
         Reader in = new FileReader(this.dictFile);
         BufferedReader reader = new BufferedReader(in);
