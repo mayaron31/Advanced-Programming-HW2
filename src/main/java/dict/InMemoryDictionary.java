@@ -64,9 +64,8 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
             text = reader.readLine();
         }
         // close reader and bufferedReader
-        in.close();
         reader.close();
-
+        in.close();
     }
 
     @Override
@@ -85,8 +84,8 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
             writer.write(word);// write this to the file
             writer.newLine();// move to next line in file
         }
-        out.close();// make sure its close
         writer.close();
+        out.close();// make sure its close
 
     }
 }
