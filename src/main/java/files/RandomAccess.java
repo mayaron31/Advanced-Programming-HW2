@@ -46,14 +46,14 @@ public class RandomAccess {
                 file.seek(j - 1); // pointer to current 3 bytes
                 int firstByteSet = 0;
                 for (int m = 0; m < 3; m++) {
-                    firstByteSet = firstByteSet << 8 + file.read(); // read current 3 bytes
+                    firstByteSet = (firstByteSet << 8) + file.read(); // read current 3 bytes
                 }
                 file.seek(j + 2); // pointer to next 3 bytes
                 int secondByteSet = 0;
                 for (int m = 0; m < 3; m++) {
                     secondByteSet = (secondByteSet << 8) + file.read(); // read those 3 bytes
                 }
-                if (secondByteSet < firstByteSet) { // check for bigger char
+                if (secondByteSet != -1 && secondByteSet < firstByteSet) { // check for bigger char, and not finish
                     swap24bytes(file, firstByteSet, secondByteSet, j - 1, j + 2); // swap if needed
                 }
 
