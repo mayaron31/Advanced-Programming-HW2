@@ -74,11 +74,11 @@ public class RandomAccess {
     public static void swap24bytes(RandomAccessFile file, int firstByteSet, int secondByteSet, int firstPointer,
             int secondPointer)
             throws IOException {
-        file.seek(secondPointer); // first pointer
+        file.seek(firstPointer); // first pointer
         for (int i = 2; i >= 0; i--) {
             file.write(secondByteSet >> (8 * i)); // taking 3 bytes from secondByteSet, write in file
         }
-        file.seek(firstPointer);
+        file.seek(secondPointer);
         for (int i = 2; i >= 0; i--) {
             file.write(firstByteSet >> (8 * i)); // taking 3 bytes from firstByteSet, write in file
         }
